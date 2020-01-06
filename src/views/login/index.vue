@@ -17,21 +17,39 @@
       label="密码"
       left-icon="envelop-o"
       placeholder="请输入验证码"
-      />
+      >
+        <van-button slot="button" size="small" type="primary">发送验证码</van-button>
+      </van-field>
     </van-cell-group>
     <div class="btn">
-      <van-button type="info" class="login-btn">登录</van-button>
+      <van-button type="info" class="login-btn" @click="Login">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
+import { login } from '@/API/login'
 export default {
   data () {
     return {
       user: {
         mobile: '',
         code: ''
+      }
+    }
+  },
+  methods: {
+    async Login () {
+      this.$toast.loading({
+        mask: true,
+        message: '加载中...'
+      })
+      try {
+        let res = await login(this.user)
+        this.$toast.success('登录成功')
+        console.log(res)
+      } catch (err) {
+        this.$toast.fail('登录失败')
       }
     }
   }

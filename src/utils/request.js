@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import jsonBigint from 'json-bigint'
-const request = axios.created({
+const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn/'
 })
 // 处理失真大数字
