@@ -46,8 +46,18 @@ export default {
   },
   methods: {
     async getCode () {
-      await sendCode()
-      this.isShow = true// 点击发送验证码按钮显示倒计时
+      let { mobile } = this.user // 获取手机号
+      try {
+        this.isShow = true// 显示倒计时
+        await sendCode(mobile)
+      } catch (err) {
+        this.isShow = false
+        if (err.response.status === 429) {
+          this.$toast('不要频繁发送验证码')
+          return
+        }
+        this.$toast('发送失败')
+      }
     },
     async Login () {
       this.$toast.loading({
