@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Popup, Field, NavBar, Icon, Toast, CountDown } from 'vant'
+import { Button, Popup, Field, NavBar, Icon, Toast, CountDown, Tabbar, TabbarItem } from 'vant'
 Vue.use(Button)
   .use(Popup)
   .use(Field)
@@ -7,3 +7,5 @@ Vue.use(Button)
   .use(Icon)
   .use(Toast)
   .use(CountDown)
+  .use(Tabbar)
+  .use(TabbarItem)
