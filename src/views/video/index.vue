@@ -1,5 +1,7 @@
 <template>
-  <div>视频</div>
+  <van-nav-bar
+  title="开发中..."
+  />
 </template>
 
 <script>

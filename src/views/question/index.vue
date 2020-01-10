@@ -1,5 +1,7 @@
 <template>
-  <div>问答</div>
+  <van-nav-bar
+  title="开发中..."
+  />
 </template>
 
 <script>

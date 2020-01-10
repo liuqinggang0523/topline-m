@@ -8,40 +8,38 @@
             class="avatar"
             round
             fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="userInfo.photo"
           />
-          <div class="title">黑马程序员</div>
+          <div class="title">{{userInfo.name}}</div>
         </div>
         <van-button round size="mini">编辑资料</van-button>
       </div>
       <van-grid class="data-info" :border="false">
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{userInfo.art_count}}</span>
           <span class="text">头条</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{userInfo. follow_count}}</span>
           <span class="text">关注</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{userInfo.fans_count}}</span>
           <span class="text">粉丝</span>
         </van-grid-item>
         <van-grid-item>
-          <span class="count">123</span>
+          <span class="count">{{userInfo. like_count}}</span>
           <span class="text">获赞</span>
         </van-grid-item>
       </van-grid>
     </div>
     <!-- /已登录：用户信息 -->
-
     <!-- 未登录 -->
     <div class="not-login" v-else>
       <div class="mobile"></div>
       <div class="text" @click="$router.push('/login')">点击登录</div>
     </div>
     <!-- /未登录 -->
-
     <!-- 其它 -->
     <van-grid clickable :column-num="3">
       <van-grid-item text="我的收藏">
@@ -70,21 +68,39 @@
       />
     </van-cell-group>
     <!-- /其它 -->
+    <!-- 弹窗 -->
+    <van-dialog id="van-dialog" />
   </div>
 </template>
 
 <script>
+import { getUserInfo } from '@/API/user'
 export default {
   name: 'MyPage',
   components: {},
   props: {},
   data () {
-    return {}
+    return {
+      userInfo: {}
+    }
   },
-  created () {},
+  created () {
+    this.getUserInfo()
+  },
   methods: {
+    async getUserInfo () {
+      let res = await getUserInfo()
+      this.userInfo = res.data.data
+    },
     async logOut () {
-      this.$router.push('/login')
+      this.$dialog.confirm({
+        title: '退出提示',
+        message: '确定退出吗?退出后将收不到任何消息'
+      }).then(() => {
+        this.$store.commit('setUser', null)
+      }).catch(() => {
+        this.$toast('已取消')
+      })
     }
   }
 }

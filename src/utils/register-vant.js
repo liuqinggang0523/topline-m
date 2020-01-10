@@ -12,7 +12,8 @@ import { Button,
   Grid,
   GridItem,
   Cell,
-  CellGroup } from 'vant'
+  CellGroup,
+  Dialog } from 'vant'
 Vue.use(Button)
   .use(Popup)
   .use(Field)
@@ -27,3 +28,4 @@ Vue.use(Button)
   .use(GridItem)
   .use(Cell)
   .use(CellGroup)
+  .use(Dialog)
