@@ -3,7 +3,6 @@
     <!-- 下拉刷新组件 -->
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <span>{{channel.id}}</span>
         <van-cell v-for="(item,index) in list" :key="index" :title="item.title">
           <div slot="label">
             <van-grid :border="false" :column-num="3">
@@ -42,13 +41,19 @@ export default {
     }
   },
   methods: {
-    onRefresh () {
-      // 下拉刷新
-      setTimeout(() => {
-        this.$toast('刷新成功')
-        this.isLoading = false
-        this.count++
-      }, 500)
+    async onRefresh () { // 下拉刷新
+      const { data } = await getArticles({
+        channel_id: this.channel.id,
+        timestamp: Date.now(),
+        with_top: 1
+      })
+      // 如果有最新数据，则把最新数据unshift到文章列表最前面
+      const { results } = data.data
+      if (results) {
+        this.list.unshift(...results)
+      }
+      this.isLoading = false
+      this.$toast(`更新了${results.length}条数据`)
     },
     async onLoad () {
       // 上拉刷新
