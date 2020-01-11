@@ -1,0 +1,80 @@
+<template>
+  <div class="article-list">
+    <!-- 下拉刷新组件 -->
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <span>{{channel.id}}</span>
+        <van-cell v-for="(item,index) in list" :key="index" :title="item.title">
+          <div slot="label">
+            <van-grid :border="false" :column-num="3">
+              <van-grid-item v-for="(img, index) in item.cover.images" :key="index">
+                <van-image height="80" :src="img" />
+              </van-grid-item>
+            </van-grid>
+            <div class="article-info">
+              <span>{{ item.aut_name }}</span>
+              <span>{{ item.comm_count }}评论</span>
+              <span>{{ item.pubdate }}</span>
+            </div>
+          </div>
+        </van-cell>
+      </van-list>
+    </van-pull-refresh>
+  </div>
+</template>
+
+<script>
+import { getArticles } from '@/API/article'
+export default {
+  props: {
+    channel: {
+      type: Object,
+      required: true
+    }
+  },
+  data () {
+    return {
+      list: [],
+      loading: false,
+      finished: false,
+      isLoading: false,
+      timestamp: null
+    }
+  },
+  methods: {
+    onRefresh () {
+      // 下拉刷新
+      setTimeout(() => {
+        this.$toast('刷新成功')
+        this.isLoading = false
+        this.count++
+      }, 500)
+    },
+    async onLoad () {
+      // 上拉刷新
+      // 异步更新数据
+      const { data } = await getArticles({
+        channel_id: this.channel.id,
+        /**
+         * 页面第一次加载使用Date.now(获取最新时间戳)
+         * 下一页加载使用本次返回数据中的timestamp
+         */
+        timestamp: this.timestamp || Date.now(), // 时间戳
+        with_top: 1 // 是否置顶
+      })
+      let res = data.data.results
+      this.list.push(...res) // 把请求获取到的数据添加到数组列表中
+      this.loading = false // 加载状态结束
+      if (res.length) {
+        // 判断数据是否加载完毕
+        this.timestamp = data.data.pre_timestamp
+      } else {
+        this.finished = true
+      }
+    }
+  }
+}
+</script>
+
+<style>
+</style>
