@@ -17,6 +17,7 @@
         v-for="channel in remainingChannels"
         :key="channel.id"
         :text="channel.name"
+        @click="addChannel(channel)"
       />
     </van-grid>
   </div>
@@ -28,7 +29,7 @@ export default {
   name: 'ChannelsEdit',
   data () {
     return {
-      list: []
+      list: [] // 所有频道
     }
   },
   props: {
@@ -38,10 +39,12 @@ export default {
     }
   },
   methods: {
-    async onlondChannels () {
+    async onlondChannels () { // 所有频道
       const { data } = await getChannelsList()
       this.list = data.data.channels
-      console.log(this.list)
+    },
+    addChannel (channel) { // 点击将推荐频道添加到我的频道列表中
+      this.userChannels.push(channel)
     }
   },
   computed: {
