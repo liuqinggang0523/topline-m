@@ -14,11 +14,15 @@
       <van-grid-item
         v-for="(channel,index) in userChannels"
         :key="channel.id"
-        :text="channel.name"
         @click="onUserChannelClick(index)"
       >
+        <span
+          slot="text"
+          :class="{active:value===index}"
+          class="text">
+        {{channel.name}}</span>
         <van-icon
-          v-show="isEditShow"
+          v-show="isEditShow &&index!=0"
           class="close-icon"
           slot="icon"
           name="close"
@@ -39,6 +43,7 @@
 
 <script>
 import { getChannelsList } from '@/API/channels'
+import { setItem } from '@/utils/storage'
 export default {
   name: 'ChannelsEdit',
   data () {
@@ -51,12 +56,24 @@ export default {
     userChannels: {
       type: Array,
       required: true
+    },
+    value: {
+      type: Number,
+      required: true
+    }
+  },
+  watch: {
+    userChannels () {
+      setItem('user-channels', this.userChannels)
     }
   },
   methods: {
     onUserChannelClick (index) {
-      if (this.isEditShow) { // 判断是编辑状态还是未编辑状态
+      if (this.isEditShow && index !== 0) { // 判断是编辑状态还是未编辑状态
         this.userChannels.splice(index, 1)
+      } else {
+        this.$emit('input', index)
+        this.$emit('close')
       }
     },
     async onlondChannels () { // 所有频道
@@ -97,6 +114,13 @@ export default {
           font-size: 18px;
         }
       }
+    }
+    .text{
+      font-size: 12px;
+      color: #646566;
+    }
+    .active{
+      color: red;
     }
   }
 </style>

@@ -21,7 +21,10 @@
       close-icon-position="top-left"
       closeable
     >
-    <channels-edit :user-channels="userChannels"/>
+    <channels-edit
+      :user-channels="userChannels"
+      v-model="active"
+      @close="isChannelEditShow=false"/>
     </van-popup>
   </div>
 </template>
@@ -30,6 +33,7 @@
 import { getUserChannels } from '@/API/user'
 import ArticleList from './components/articlelist'
 import ChannelsEdit from './components/channeledit'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'HomePage',
   components: { ArticleList,
@@ -37,14 +41,22 @@ export default {
   props: {},
   data () {
     return {
+      active: 0, // 默认某一个频道被激活的下标，也就是控制激活哪一个频道的标签页
       isChannelEditShow: false, // 弹窗是否打开
       userChannels: []
     }
   },
   methods: {
     async getUserChannels () {
-      let res = await getUserChannels()
-      this.userChannels = res.data.data.channels
+      let channels = []
+      const localUserChannels = getItem('user-channels') // 获取本地存储的频道信息
+      if (localUserChannels) {
+        channels = localUserChannels // 有则使用,没有使用接口的
+      } else {
+        let res = await getUserChannels()
+        channels = res.data.data.channels
+      }
+      this.userChannels = channels
     }
   },
   created () {
