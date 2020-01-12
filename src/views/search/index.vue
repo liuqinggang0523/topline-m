@@ -11,70 +11,46 @@
         @cancel="onCancel=$router.back()"
       />
     </form>
+    <!-- 搜索结果 -->
+    <search-result v-if="isResultsShow"/>
     <!-- 联想建议 -->
-    <van-cell-group>
+    <van-cell-group v-else-if="searchText">
       <van-cell icon="search" title="单元格" />
     </van-cell-group>
     <!-- 历史记录 -->
-    <van-cell title="历史记录">
-      <van-icon name="delete" />
-      <span>全部删除</span>
-      &nbsp;&nbsp;
-      <span>完成</span>
-    </van-cell>
-    <van-cell-group>
+    <van-cell-group v-else>
+      <van-cell title="历史记录">
+        <van-icon name="delete" />
+        <span>全部删除</span>
+        &nbsp;&nbsp;
+        <span>完成</span>
+      </van-cell>
       <van-cell title="单元格">
         <van-icon name="close"></van-icon>
       </van-cell>
     </van-cell-group>
-    <!-- 下拉列表 -->
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell
-        v-for="item in list"
-        :key="item"
-        :title="item"
-      />
-    </van-list>
   </div>
 </template>
 
 <script>
+import SearchResult from './components/search-result'
 export default {
-  name: 'searchPage',
+  name: 'SearchPage',
+  components: {
+    SearchResult
+  },
   data () {
     return {
       searchText: '', // 搜索框内容
-      list: [],
-      loading: false,
-      finished: false
+      isResultsShow: false // 搜索结果显示状态
     }
   },
   methods: {
     onSearch () {
-
+      this.isResultsShow = true
     },
     onCancel () {
 
-    },
-    onLoad () {
-      // 异步更新数据
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
     }
   }
 }
