@@ -1,8 +1,18 @@
 <template>
   <div class="homePage">
-    <van-nav-bar fixed title="首页" />
+    <van-nav-bar fixed title="首页">
+     <van-icon
+        name="search"
+        slot="right"
+        class="search"
+        @click="$router.push('/search')"/>
+    </van-nav-bar>
     <!-- 频道列表组件 -->
-    <van-tabs animated color="#3196fa" :duration="0.6" class="nav">
+    <van-tabs animated
+      color="#3196fa"
+      :duration="0.6"
+      class="nav"
+      v-model="active">
       <van-icon
         class="wap-nav"
         slot="nav-right"
@@ -11,20 +21,22 @@
       />
       <van-tab :title="channel.name" v-for="channel in userChannels" :key="channel.id">
         <!-- 文章列表组件 -->
-        <article-list :channel="channel" />
+        <article-list :channel="channel"/>
       </van-tab>
     </van-tabs>
-    <van-popup v-model="isChannelEditShow"
+    <van-popup
+      v-model="isChannelEditShow"
       round
       position="bottom"
       :style="{ height: '90%' }"
       close-icon-position="top-left"
       closeable
     >
-    <channels-edit
-      :user-channels="userChannels"
-      v-model="active"
-      @close="isChannelEditShow=false"/>
+      <channels-edit
+        :user-channels="userChannels"
+        v-model="active"
+        @close="isChannelEditShow=false"
+      />
     </van-popup>
   </div>
 </template>
@@ -36,8 +48,7 @@ import ChannelsEdit from './components/channeledit'
 import { getItem } from '@/utils/storage'
 export default {
   name: 'HomePage',
-  components: { ArticleList,
-    ChannelsEdit },
+  components: { ArticleList, ChannelsEdit },
   props: {},
   data () {
     return {
@@ -69,11 +80,15 @@ export default {
 .homePage {
   padding-top: 90px;
   padding-bottom: 100px;
-  .wap-nav{
+  .search{
+    color: #fff;
+    font-size: 18px;
+  }
+  .wap-nav {
     position: fixed;
     right: 0;
     background-color: #fff;
-    font-size:24px;
+    font-size: 24px;
     line-height: 44px;
   }
   /deep/ .van-tabs__wrap {

@@ -6,7 +6,7 @@
         slot="right-icon"
         size="mini"
         round
-        type="danger"
+        type="info"
         @click="isEditShow=!isEditShow"
       >{{isEditShow?'完成':'编辑'}}</van-button>
     </van-cell>
@@ -120,7 +120,7 @@ export default {
       color: #646566;
     }
     .active{
-      color: red;
+      color: #3196fa;
     }
   }
 </style>

@@ -10,8 +10,10 @@ export const getItem = name => {
 }
 
 export const setItem = (name, value) => {
-  const data = typeof value === 'object' ? JSON.stringify(value) : value
-  window.localStorage.setItem(name, data)
+  if (typeof value === 'object') {
+    value = JSON.stringify(value)
+  }
+  window.localStorage.setItem(name, value)
 }
 
 export const remove = name => {
