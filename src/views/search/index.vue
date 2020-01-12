@@ -9,13 +9,20 @@
         show-action
         @search="onSearch"
         @cancel="onCancel=$router.back()"
+        @input="onlondSuggestion"
       />
     </form>
     <!-- 搜索结果 -->
     <search-result v-if="isResultsShow"/>
     <!-- 联想建议 -->
     <van-cell-group v-else-if="searchText">
-      <van-cell icon="search" title="单元格" />
+      <van-cell
+        icon="search"
+        v-for="item in suggestion"
+        :key="item"
+        >
+        <span slot="title" v-html="highlight(item)"></span>
+      </van-cell>
     </van-cell-group>
     <!-- 历史记录 -->
     <van-cell-group v-else>
@@ -34,6 +41,7 @@
 
 <script>
 import SearchResult from './components/search-result'
+import { getSuggestion } from '@/API/search'
 export default {
   name: 'SearchPage',
   components: {
@@ -42,15 +50,26 @@ export default {
   data () {
     return {
       searchText: '', // 搜索框内容
-      isResultsShow: false // 搜索结果显示状态
+      isResultsShow: false, // 搜索结果显示状态
+      suggestion: []// 搜索联想列表
     }
   },
   methods: {
+    highlight (str) {
+      return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:red">${this.searchText}</span>`)
+    },
     onSearch () {
       this.isResultsShow = true
     },
     onCancel () {
 
+    },
+    async onlondSuggestion () {
+      if (!this.searchText) {
+        return
+      }
+      const { data } = await getSuggestion(this.searchText)
+      this.suggestion = data.data.options
     }
   }
 }
