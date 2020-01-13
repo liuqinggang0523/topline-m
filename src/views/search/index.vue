@@ -7,7 +7,7 @@
         shape="round"
         background="#3296fa"
         show-action
-        @search="onSearch"
+        @search="onSearch(searchText)"
         @cancel="onCancel=$router.back()"
         @input="onlondSuggestion"
         @focus="isResultsShow=false"
@@ -21,6 +21,7 @@
         icon="search"
         v-for="item in suggestion"
         :key="item"
+        @click="onSearch(item)"
         >
         <span slot="title" v-html="highlight(item)"></span>
       </van-cell>
@@ -28,12 +29,18 @@
     <!-- 历史记录 -->
     <van-cell-group v-else>
       <van-cell title="历史记录">
-        <van-icon name="delete" />
-        <span>全部删除</span>
-        &nbsp;&nbsp;
-        <span>完成</span>
+        <template v-if="deleteBtn">
+          <span @click="searchHistories=[]">全部删除</span>
+          &nbsp;&nbsp;
+          <span @click="deleteBtn=false">完成</span>
+        </template>
+        <van-icon name="delete" v-else @click="deleteBtn=true"/>
       </van-cell>
-      <van-cell title="单元格">
+      <van-cell
+        :title="item"
+        v-for="(item,index) in searchHistories"
+        :key="index"
+        @click="onSearch(item)">
         <van-icon name="close"></van-icon>
       </van-cell>
     </van-cell-group>
@@ -43,6 +50,7 @@
 <script>
 import SearchResult from './components/search-result'
 import { getSuggestion } from '@/API/search'
+import { setItem, getItem } from '@/utils/storage'
 export default {
   name: 'SearchPage',
   components: {
@@ -52,14 +60,32 @@ export default {
     return {
       searchText: '', // 搜索框内容
       isResultsShow: false, // 搜索结果显示状态
-      suggestion: []// 搜索联想列表
+      suggestion: [], // 搜索联想列表,
+      deleteBtn: false,
+      searchHistories: getItem('searc-histories') || []
+    }
+  },
+  watch: {
+    searchHistories (newValue) {
+      setItem('searc-histories', newValue)
     }
   },
   methods: {
     highlight (str) {
       return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:red">${this.searchText}</span>`)
     },
-    onSearch () {
+    onSearch (q) {
+      /**
+       * q:文本框数据本身,联想建议文本,或者历史记录文本
+       * 修改搜索框文本内容
+       */
+      this.searchText = q
+      const index = this.searchHistories.indexOf(this.searchText)
+      if (index !== -1) {
+        this.searchHistories.splice(index, 1)
+      }
+      this.searchHistories.unshift(this.searchText)
+      // 记录搜索记录
       this.isResultsShow = true
     },
     onCancel () {
