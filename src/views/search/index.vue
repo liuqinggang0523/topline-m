@@ -42,7 +42,7 @@
         :key="index"
         @click="onSearch(item)">
         <van-icon name="close"
-          @click="searchHistories.splice(index,1)"
+          @click.stop="searchHistories.splice(index,1)"
           v-show="isDeleteShow">
         </van-icon>
       </van-cell>

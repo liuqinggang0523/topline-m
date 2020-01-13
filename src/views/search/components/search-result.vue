@@ -21,7 +21,7 @@ export default {
   props: {
     q: {
       type: String,
-      require: true
+      required: true
     }
   },
   data () {
