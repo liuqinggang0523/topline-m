@@ -10,10 +10,11 @@
         @search="onSearch"
         @cancel="onCancel=$router.back()"
         @input="onlondSuggestion"
+        @focus="isResultsShow=false"
       />
     </form>
     <!-- 搜索结果 -->
-    <search-result v-if="isResultsShow"/>
+    <search-result v-if="isResultsShow" :q="searchText"/>
     <!-- 联想建议 -->
     <van-cell-group v-else-if="searchText">
       <van-cell

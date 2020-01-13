@@ -108,8 +108,8 @@ export default {
       position: relative;
      .van-grid-item__icon-wrapper{
         position: absolute;
-        top: -12px;
-        right: -5px;
+        top: -5px;
+        right: -3px;
         .close-icon{
           font-size: 18px;
         }
