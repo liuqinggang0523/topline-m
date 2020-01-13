@@ -9,7 +9,7 @@
         show-action
         @search="onSearch(searchText)"
         @cancel="onCancel=$router.back()"
-        @input="onlondSuggestion"
+        @input="OnlondSuggestion"
         @focus="isResultsShow=false"
       />
     </form>
@@ -29,19 +29,22 @@
     <!-- 历史记录 -->
     <van-cell-group v-else>
       <van-cell title="历史记录">
-        <template v-if="deleteBtn">
+        <template v-if="isDeleteShow">
           <span @click="searchHistories=[]">全部删除</span>
           &nbsp;&nbsp;
-          <span @click="deleteBtn=false">完成</span>
+          <span @click="isDeleteShow=false">完成</span>
         </template>
-        <van-icon name="delete" v-else @click="deleteBtn=true"/>
+        <van-icon name="delete" v-else @click="isDeleteShow=true"/>
       </van-cell>
       <van-cell
         :title="item"
         v-for="(item,index) in searchHistories"
         :key="index"
         @click="onSearch(item)">
-        <van-icon name="close"></van-icon>
+        <van-icon name="close"
+          @click="searchHistories.splice(index,1)"
+          v-show="isDeleteShow">
+        </van-icon>
       </van-cell>
     </van-cell-group>
   </div>
@@ -51,6 +54,7 @@
 import SearchResult from './components/search-result'
 import { getSuggestion } from '@/API/search'
 import { setItem, getItem } from '@/utils/storage'
+import { debounce } from 'lodash'
 export default {
   name: 'SearchPage',
   components: {
@@ -61,7 +65,7 @@ export default {
       searchText: '', // 搜索框内容
       isResultsShow: false, // 搜索结果显示状态
       suggestion: [], // 搜索联想列表,
-      deleteBtn: false,
+      isDeleteShow: false,
       searchHistories: getItem('searc-histories') || []
     }
   },
@@ -72,7 +76,7 @@ export default {
   },
   methods: {
     highlight (str) {
-      return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:red">${this.searchText}</span>`)
+      return str.toLowerCase().replace(this.searchText.toLowerCase(), `<span style="color:#3196fa">${this.searchText}</span>`)
     },
     onSearch (q) {
       /**
@@ -91,13 +95,13 @@ export default {
     onCancel () {
 
     },
-    async onlondSuggestion () {
+    OnlondSuggestion: debounce(async function () {
       if (!this.searchText) {
         return
       }
       const { data } = await getSuggestion(this.searchText)
       this.suggestion = data.data.options
-    }
+    }, 500)
   }
 }
 </script>
