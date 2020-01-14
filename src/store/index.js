@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { setItem, getItem } from '@/utils/storage'
+import decodeJwt from 'jwt-decode'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,9 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, data) {
       state.user = data
+      if (data && data.token) { // 解析token得到用户id
+        data.id = decodeJwt(data.token).user_id
+      }
       setItem('user', state.user)
     }
   },

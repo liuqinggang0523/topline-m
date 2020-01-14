@@ -24,3 +24,24 @@ export const getUserChannels = () => { // 用户频道列表
     url: '/app/v1_0/user/channels'
   })
 }
+/**
+ * 关注用户
+ */
+export const addFollowing = (articleid) => {
+  return request({
+    method: 'post',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target: articleid
+    }
+  })
+}
+/**
+ * 取消关注用户
+ */
+export const deleteFollowing = (articleid) => {
+  return request({
+    method: 'delete',
+    url: `/app/v1_0/user/followings/${articleid}`
+  })
+}

@@ -30,7 +30,15 @@
             <p class="time">{{article.pubdate}}</p>
           </div>
         </div>
-        <van-button class="follow-btn" type="info" size="small" round>+ 关注</van-button>
+        <van-button
+          v-if="!$store.state.user||article.aut_id!==$store.state.user.id"
+          class="follow-btn"
+          :type="article.is_followed ? 'default' : 'info'"
+          size="small"
+          round
+          @click="OnFollowing"
+          :loading="isFollowLoading"
+        >{{article.is_followed?'已关注':'+关注'}}</van-button>
       </div>
       <div class="markdown-body" v-html="article.content"></div>
     </div>
@@ -79,6 +87,7 @@
 
 <script>
 import { getArticle, addCollect, deleteCollect, addLiking, deleteLiking } from '@/API/article'
+import { addFollowing, deleteFollowing } from '@/API/user'
 export default {
   name: 'articlePage',
   props: {
@@ -90,10 +99,28 @@ export default {
   data () {
     return {
       loading: false,
-      article: { }
+      article: { },
+      isFollowLoading: false // 关注按钮的 loading 状态
     }
   },
   methods: {
+    async OnFollowing () {
+      this.isFollowLoading = true
+      try {
+        if (this.article.is_followed) {
+          await deleteFollowing(this.article.aut_id)
+          this.article.is_followed = false
+          this.$toast.success('取消成功')
+        } else {
+          await addFollowing(this.article.aut_id)
+          this.article.is_followed = true
+          this.$toast.success('关注成功')
+        }
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+      this.isFollowLoading = false
+    },
     async OnAttitude () {
       // 两个作用：1、交互提示 2、防止网络慢用户连续不断的点击按钮请求
       this.$toast.loading({
