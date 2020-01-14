@@ -59,15 +59,17 @@
       <van-icon
         class="comment-icon"
         name="chat-o"
-        info="9"
+        info="99"
       />
       <van-icon
         color="orange"
-        name="star"
+        :name="article.is_collected?'star':'star-o'"
+        @click="OnCollect"
       />
       <van-icon
         color="#e5645f"
-        name="good-job"
+        :name="article.attitude===-1? 'good-job-o':'good-job'"
+        @click="OnAttitude"
       />
       <van-icon class="share-icon" name="share" />
     </div>
@@ -76,7 +78,7 @@
 </template>
 
 <script>
-import { getArticle } from '@/API/article'
+import { getArticle, addCollect, deleteCollect, addLiking, deleteLiking } from '@/API/article'
 export default {
   name: 'articlePage',
   props: {
@@ -92,7 +94,48 @@ export default {
     }
   },
   methods: {
-    async loadArticle () {
+    async OnAttitude () {
+      // 两个作用：1、交互提示 2、防止网络慢用户连续不断的点击按钮请求
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '操作中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        if (this.article.attitude === 1) {
+          await deleteLiking(this.articleID)
+          this.article.attitude = -1
+          this.$toast.success('取消点赞')
+        } else {
+          await addLiking(this.articleID)
+          this.article.attitude = 1
+          this.$toast.success('点赞成功')
+        }
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
+    async OnCollect () {
+      this.$toast.loading({
+        duration: 0,
+        message: '操作中...',
+        forbidClick: true
+      })
+      try {
+        if (this.article.is_collected) {
+          await deleteCollect(this.articleID)
+          this.article.is_collected = false
+          this.$toast.success('已取消收藏')
+        } else {
+          await addCollect(this.articleID)
+          this.article.is_collected = true
+          this.$toast.success('收藏成功')
+        }
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
+    async loadArticle () { // 文章详情
       this.loading = true
       const res = await getArticle(this.articleID)
       console.log(res)
@@ -107,7 +150,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "./github-markdown.css";
 .article-container {
+  padding: 55px 0 60px 0;
   position: absolute;
   left: 0;
   top: 0;
@@ -124,7 +169,6 @@ export default {
   .detail {
     .title {
       margin: 0;
-      padding-top: 24px;
       font-size: 20px;
       color: #3A3A3A;
     }

@@ -24,19 +24,19 @@ export const getArticle = (articleid) => {
 /**
  * 收藏文章
  */
-export const addCollections = (articleid) => {
+export const addCollect = (articleid) => {
   return request({
     method: 'post',
-    url: ` /app/v1_0/article/collections`,
+    url: `/app/v1_0/article/collections`,
     data: { target: articleid }
   })
 }
 /**
  * 取消收藏文章
  */
-export const deleteCollections = (articleid) => {
+export const deleteCollect = (articleid) => {
   return request({
-    method: ' DELETE',
+    method: 'DELETE',
     url: `/app/v1_0/article/collections/${articleid}`
   })
 }
@@ -55,7 +55,7 @@ export const addLiking = (articleid) => {
  */
 export const deleteLiking = (articleid) => {
   return request({
-    method: 'post',
+    method: 'DELETE',
     url: `/app/v1_0/article/likings/${articleid}`
   })
 }
