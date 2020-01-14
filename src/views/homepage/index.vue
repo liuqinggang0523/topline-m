@@ -1,12 +1,22 @@
 <template>
   <div class="homePage">
-    <van-nav-bar fixed title="首页">
+    <!-- <van-nav-bar fixed title="首页">
      <van-icon
         name="search"
         slot="right"
         class="search"
         @click="$router.push('/search')"/>
-    </van-nav-bar>
+    </van-nav-bar> -->
+    <div class="nav-bar">
+      <van-button
+        class="search-btn"
+        round
+        type="info"
+        size="small"
+        icon="search"
+        @click="$router.push('/search')"
+        >搜索</van-button>
+    </div>
     <!-- 频道列表组件 -->
     <van-tabs animated
       color="#3196fa"
@@ -80,9 +90,22 @@ export default {
 .homePage {
   padding-top: 90px;
   padding-bottom: 100px;
-  .search{
-    color: #fff;
-    font-size: 18px;
+  .nav-bar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 15px;
+    height: 46px;
+    background-color: #3196fa;
+    z-index: 1;
+    .search-btn {
+      background-color: #5babfb;
+      width: 80%;
+    }
   }
   .wap-nav {
     position: fixed;

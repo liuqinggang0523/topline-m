@@ -18,7 +18,8 @@ import { Button,
   Tab,
   List,
   PullRefresh,
-  Search } from 'vant'
+  Search,
+  Loading } from 'vant'
 Vue.use(Button)
   .use(Popup)
   .use(Field)
@@ -40,3 +41,4 @@ Vue.use(Button)
   .use(PullRefresh)
   .use(Popup)
   .use(Search)
+  .use(Loading)

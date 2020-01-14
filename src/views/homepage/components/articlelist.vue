@@ -16,8 +16,10 @@
             </van-grid>
             <div class="article-info">
               <span>{{ item.aut_name }}</span>
+               &nbsp;&nbsp;
               <span>{{ item.comm_count }}评论</span>
-              <span>{{ item.pubdate }}</span>
+               &nbsp;&nbsp;
+              <span>{{ item.pubdate |formatDate}}</span>
             </div>
           </div>
         </van-cell>
@@ -27,7 +29,8 @@
 </template>
 
 <script>
-import { getArticles } from '@/API/article'
+import { getArticleList } from '@/API/article'
+import { formatDate } from '@/utils/date'
 export default {
   props: {
     channel: {
@@ -44,9 +47,16 @@ export default {
       timestamp: null
     }
   },
+
+  filters: {
+    formatDate (time) {
+      var date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd')
+    }
+  },
   methods: {
     async onRefresh () { // 下拉刷新
-      const { data } = await getArticles({
+      const { data } = await getArticleList({
         channel_id: this.channel.id,
         timestamp: Date.now(),
         with_top: 1
@@ -62,7 +72,7 @@ export default {
     async onLoad () {
       // 上拉刷新
       // 异步更新数据
-      const { data } = await getArticles({
+      const { data } = await getArticleList({
         channel_id: this.channel.id,
         /**
          * 页面第一次加载使用Date.now(获取最新时间戳)
