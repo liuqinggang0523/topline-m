@@ -77,6 +77,7 @@
         type="default"
         round
         size="small"
+        @click="isPostShow=true"
       >写评论</van-button>
       <van-icon
         class="comment-icon"
@@ -96,13 +97,33 @@
       <van-icon class="share-icon" name="share" />
     </div>
     <!-- /底部区域 -->
+     <!-- 发布文章评论 -->
+    <van-popup
+      v-model="isPostShow"
+      position="bottom"
+    >
+      <div class="post-comment">
+        <van-field
+          class="post-field"
+          v-model="postMessage"
+          rows="2"
+          autosize
+          type="textarea"
+          maxlength="50"
+          placeholder="请输入留言"
+          show-word-limit
+        />
+        <van-button size="small" type="primary" @click="addComment">发布</van-button>
+      </div>
+    </van-popup>
+    <!-- /发布文章评论 -->
   </div>
 </template>
 
 <script>
 import { getArticle, addCollect, deleteCollect, addLiking, deleteLiking } from '@/API/article'
 import { addFollowing, deleteFollowing } from '@/API/user'
-import { getComments } from '@/API/comment'
+import { getComments, addComment } from '@/API/comment'
 import CommentList from './components/commentlist'
 export default {
   name: 'articlePage',
@@ -117,6 +138,8 @@ export default {
   },
   data () {
     return {
+      isPostShow: false, // 控制评论弹窗
+      postMessage: '',
       loading: false,
       article: { },
       isFollowLoading: false, // 关注按钮的 loading 状态
@@ -130,7 +153,30 @@ export default {
     }
   },
   methods: {
-    async OnFollowing () {
+    async addComment () { // 发布评论
+      if (!postMessage) {
+        return
+      }
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        message: '发布中...',
+        forbidClick: true // 是否禁止背景点击
+      })
+      try {
+        const { data } = await addComment({
+          target: this.articleID,
+          content: this.postMessage
+        })
+        this.comments.list.unshift(data.data.new_obj)
+        this.$toast.success('评论成功')
+        this.comments.totalCount++
+        this.isPostShow = false
+        this.postMessage = ''
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
+    async OnFollowing () { // 关注操作
       this.isFollowLoading = true
       try {
         if (this.article.is_followed) {
@@ -147,7 +193,7 @@ export default {
       }
       this.isFollowLoading = false
     },
-    async OnAttitude () {
+    async OnAttitude () { // 点赞操作
       // 两个作用：1、交互提示 2、防止网络慢用户连续不断的点击按钮请求
       this.$toast.loading({
         duration: 0, // 持续展示 toast
@@ -191,7 +237,6 @@ export default {
     async loadArticle () { // 文章详情
       this.loading = true
       const res = await getArticle(this.articleID)
-      console.log(res)
       this.article = res.data.data
       this.loading = false
     },
@@ -206,9 +251,8 @@ export default {
       const { results } = data.data
       this.comments.list.push(...results)
       this.comments.totalCount = data.data.total_count
-      console.log(data)
       // 加载状态结束
-      this.loading = false
+      this.comments.loading = false
       // 数据全部加载完成
       if (results.length) {
         this.comments.offset = data.data.last_id // 更新获取下一页数据的页码
@@ -316,6 +360,16 @@ export default {
     }
     .share-icon {
       bottom: -2px;
+      color: #3A3A3A;
+    }
+  }
+  .post-comment {
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+    .post-field {
+      background: #f5f7f9;
+      margin-right: 15px;
     }
   }
 }
