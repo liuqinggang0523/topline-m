@@ -19,7 +19,7 @@
                &nbsp;&nbsp;
               <span>{{ item.comm_count }}评论</span>
                &nbsp;&nbsp;
-              <span>{{ item.pubdate |formatDate}}</span>
+              <span>{{ item.pubdate | relativeTime}}</span>
             </div>
           </div>
         </van-cell>
@@ -30,7 +30,6 @@
 
 <script>
 import { getArticleList } from '@/API/article'
-import { formatDate } from '@/utils/date'
 export default {
   props: {
     channel: {
@@ -45,13 +44,6 @@ export default {
       finished: false,
       isLoading: false,
       timestamp: null
-    }
-  },
-
-  filters: {
-    formatDate (time) {
-      var date = new Date(time)
-      return formatDate(date, 'yyyy-MM-dd')
     }
   },
   methods: {

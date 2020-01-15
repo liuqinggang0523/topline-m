@@ -27,7 +27,7 @@
           />
           <div class="text">
             <p class="name">{{article.aut_name}}</p>
-            <p class="time">{{article.pubdate}}</p>
+            <p class="time">{{article.pubdate | relativeTime}}</p>
           </div>
         </div>
         <van-button
@@ -40,7 +40,20 @@
           :loading="isFollowLoading"
         >{{article.is_followed?'已关注':'+关注'}}</van-button>
       </div>
-      <div class="markdown-body" v-html="article.content"></div>
+      <div class="markdown-body content" v-html="article.content"></div>
+       <van-divider>正文结束</van-divider>
+      <!-- 文章评论 -->
+      <van-cell title="全部评论" :border="false" />
+      <van-list
+        v-model="comments.loading"
+        :finished="comments.finished"
+        finished-text="没有更多了"
+        @load="onLoad">
+        <comment-list
+          v-for="(comment,index) in comments.list"
+          :key="index"
+          :comment="comment"></comment-list>
+      </van-list>
     </div>
     <!-- /文章详情 -->
 
@@ -52,6 +65,7 @@
         class="btn"
         type="default"
         size="small"
+         @click="loadArticle"
       >点击重试</van-button>
     </div>
     <!-- /加载失败提示 -->
@@ -67,7 +81,7 @@
       <van-icon
         class="comment-icon"
         name="chat-o"
-        info="99"
+        :info="comments.totalCount"
       />
       <van-icon
         color="orange"
@@ -88,6 +102,8 @@
 <script>
 import { getArticle, addCollect, deleteCollect, addLiking, deleteLiking } from '@/API/article'
 import { addFollowing, deleteFollowing } from '@/API/user'
+import { getComments } from '@/API/comment'
+import CommentList from './components/commentlist'
 export default {
   name: 'articlePage',
   props: {
@@ -96,11 +112,21 @@ export default {
       required: true
     }
   },
+  components: {
+    CommentList
+  },
   data () {
     return {
       loading: false,
       article: { },
-      isFollowLoading: false // 关注按钮的 loading 状态
+      isFollowLoading: false, // 关注按钮的 loading 状态
+      comments: {
+        list: [],
+        loading: false,
+        finished: false,
+        offset: null, // 请求下一页数据的页码
+        totalCount: 0 // 总数据条数
+      }
     }
   },
   methods: {
@@ -168,6 +194,27 @@ export default {
       console.log(res)
       this.article = res.data.data
       this.loading = false
+    },
+    async onLoad () {
+    // 异步更新数据
+      const { data } = await getComments({
+        type: 'a',
+        source: this.articleID,
+        offset: this.comments.offset,
+        limit: 10
+      })
+      const { results } = data.data
+      this.comments.list.push(...results)
+      this.comments.totalCount = data.data.total_count
+      console.log(data)
+      // 加载状态结束
+      this.loading = false
+      // 数据全部加载完成
+      if (results.length) {
+        this.comments.offset = data.data.last_id // 更新获取下一页数据的页码
+      } else {
+        this.comments.finished = true // 没有数据了，关闭加载更多
+      }
     }
   },
   created () {
@@ -179,7 +226,7 @@ export default {
 <style lang="less" scoped>
 @import "./github-markdown.css";
 .article-container {
-  padding: 55px 0 60px 0;
+  padding: 46px 0 45px;
   position: absolute;
   left: 0;
   top: 0;
@@ -194,13 +241,19 @@ export default {
     text-align: center;
   }
   .detail {
+      background-color: #fff;
     .title {
+      padding: 0 20px;
+      padding-top: 24px;
       margin: 0;
       font-size: 20px;
       color: #3A3A3A;
     }
+    .content {
+      padding: 0 20px;
+    }
     .author-wrap {
-      padding: 20px 0;
+      padding: 20px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
