@@ -26,7 +26,7 @@
         >回复 {{ comment.reply_count}}</van-button>
       </p>
     </div>
-    <div slot="right-icon" class="like-container">
+    <div slot="right-icon" class="like-container" @click="clickLiking">
       <van-icon
         :color="comment.is_liking ? '#e5645f' : ''"
         :name="comment.is_liking ? 'good-job' : 'good-job-o'"
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { addCommentLiking, deleteCommentLiking } from '@/API/comment'
 export default {
   props: {
     comment: {
@@ -46,6 +47,19 @@ export default {
   },
   data () {
     return {
+    }
+  },
+  methods: {
+    clickLiking () {
+      const commentId = this.comment.com_id.toString()
+      if (this.comment.is_liking) {
+        deleteCommentLiking(commentId)
+        this.comment.like_count--
+      } else {
+        addCommentLiking(commentId)
+        this.comment.like_count++
+      }
+      this.comment.is_liking = !this.comment.is_liking
     }
   }
 

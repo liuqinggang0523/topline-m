@@ -19,3 +19,22 @@ export const addComment = data => {
     data
   })
 }
+/**
+ * 对评论或评论回复点赞
+ */
+export const addCommentLiking = (commentID) => {
+  return request({
+    method: 'post',
+    url: '/app/v1_0/comment/likings',
+    data: { target: commentID }
+  })
+}
+/**
+ * 取消对评论或评论回复点赞
+ */
+export const deleteCommentLiking = commentID => {
+  return request({
+    method: 'delete',
+    url: `/app/v1_0/comment/likings/${commentID}`
+  })
+}
