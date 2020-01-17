@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 /**
- * 获取评论列表
+ * 获取评论列表或者回复评论列表
  */
 export const getComments = params => {
   return request({

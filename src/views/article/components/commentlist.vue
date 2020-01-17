@@ -17,12 +17,13 @@
       <!-- /评论内容 -->
       <p>
         <!-- 评论发布日期 -->
-        <span style="margin-right: 10px;">{{ comment.pubdate }}</span>
+        <span style="margin-right: 10px;">{{ comment.pubdate |relativeTime }}</span>
         <!-- 评论发布日期 -->
         <van-button
           size="mini"
           type="default"
-        >回复 {{ comment.reply_count }}</van-button>
+          @click="$emit('click-replay',comment )"
+        >回复 {{ comment.reply_count}}</van-button>
       </p>
     </div>
     <div slot="right-icon" class="like-container">

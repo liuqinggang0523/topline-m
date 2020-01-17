@@ -52,7 +52,9 @@
         <comment-list
           v-for="(comment,index) in comments.list"
           :key="index"
-          :comment="comment"></comment-list>
+          :comment="comment"
+          @click-replay="onReplyShow"
+        ></comment-list>
       </van-list>
     </div>
     <!-- /文章详情 -->
@@ -110,13 +112,31 @@
           autosize
           type="textarea"
           maxlength="50"
-          placeholder="请输入留言"
+          placeholder="请输入评论内容"
           show-word-limit
         />
-        <van-button size="small" type="primary" @click="addComment">发布</van-button>
+        <van-button
+          size="small"
+          type="primary"
+          @click="addComment"
+          :disabled="!postMessage"
+        >发布</van-button>
       </div>
     </van-popup>
     <!-- /发布文章评论 -->
+     <!-- 评论回复 -->
+    <van-popup
+      v-model="isReplyShow"
+      closeable
+      position="bottom"
+      style="height: 90%"
+    >
+      <comment-reply
+        :comment="currentComment"
+        :articleID="articleID"
+        v-if="isReplyShow"/>
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 
@@ -125,6 +145,7 @@ import { getArticle, addCollect, deleteCollect, addLiking, deleteLiking } from '
 import { addFollowing, deleteFollowing } from '@/API/user'
 import { getComments, addComment } from '@/API/comment'
 import CommentList from './components/commentlist'
+import CommentReply from './components/comment-replay'
 export default {
   name: 'articlePage',
   props: {
@@ -134,15 +155,18 @@ export default {
     }
   },
   components: {
-    CommentList
+    CommentList,
+    CommentReply
   },
   data () {
     return {
       isPostShow: false, // 控制评论弹窗
       postMessage: '',
+      isReplyShow: false, // 控制回复评论的弹窗
       loading: false,
       article: { },
       isFollowLoading: false, // 关注按钮的 loading 状态
+      currentComment: {}, // 点击回复的那个评论对象
       comments: {
         list: [],
         loading: false,
@@ -153,6 +177,10 @@ export default {
     }
   },
   methods: {
+    onReplyShow (comment) {
+      this.isReplyShow = true
+      this.currentComment = comment
+    },
     async addComment () { // 发布评论
       if (!postMessage) {
         return
@@ -371,6 +399,9 @@ export default {
       background: #f5f7f9;
       margin-right: 15px;
     }
+  }
+  /deep/.van-icon{
+    color: #fff;
   }
 }
 </style>
