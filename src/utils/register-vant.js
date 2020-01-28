@@ -20,7 +20,9 @@ import { Button,
   PullRefresh,
   Search,
   Loading,
-  Divider } from 'vant'
+  Divider,
+  ActionSheet,
+  DatetimePicker } from 'vant'
 Vue.use(Button)
   .use(Popup)
   .use(Field)
@@ -44,3 +46,5 @@ Vue.use(Button)
   .use(Search)
   .use(Loading)
   .use(Divider)
+  .use(ActionSheet)
+  .use(DatetimePicker)
