@@ -22,7 +22,8 @@ import { Button,
   Loading,
   Divider,
   ActionSheet,
-  DatetimePicker } from 'vant'
+  DatetimePicker,
+  ImagePreview } from 'vant'
 Vue.use(Button)
   .use(Popup)
   .use(Field)
@@ -48,3 +49,4 @@ Vue.use(Button)
   .use(Divider)
   .use(ActionSheet)
   .use(DatetimePicker)
+  .use(ImagePreview)

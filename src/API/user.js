@@ -64,3 +64,13 @@ export const editUserProfile = data => {
     data
   })
 }
+/**
+ * 编辑用户个人资料
+ */
+export const editUserphoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
+    data
+  })
+}
