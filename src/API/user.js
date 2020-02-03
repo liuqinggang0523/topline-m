@@ -74,3 +74,33 @@ export const editUserphoto = data => {
     data
   })
 }
+/**
+ * 获取当前用户文章列表
+ */
+export const getUserArctile = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/articles',
+    params
+  })
+}
+/**
+ * 获取用户收藏列表
+ */
+export const getUserCollectArticle = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/article/collections',
+    params
+  })
+}
+/**
+ * 获取用户阅读历史
+ */
+export const getUserHistoryArticle = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/histories',
+    params
+  })
+}

@@ -36,16 +36,16 @@ const routes = [
     name: 'user-profile',
     component: () => import('@/views/userprofile')
   }, {
-    path: '/myarticle',
-    name: 'myarticle',
+    path: '/userarticle',
+    name: 'user-article',
     component: () => import('@/views/userarticle')
   }, {
-    path: '/myarticle/collect',
-    name: 'myarticle-collect',
+    path: '/userarticle/collect',
+    name: 'user-article-collect',
     component: () => import('@/views/userarticle')
   }, {
-    path: '/myarticle/history',
-    name: 'myarticle-history',
+    path: '/userarticle/history',
+    name: 'user-article-history',
     component: () => import('@/views/userarticle')
   }
 ]
