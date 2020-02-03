@@ -35,6 +35,18 @@ const routes = [
     path: '/userprofile',
     name: 'user-profile',
     component: () => import('@/views/userprofile')
+  }, {
+    path: '/myarticle',
+    name: 'myarticle',
+    component: () => import('@/views/userarticle')
+  }, {
+    path: '/myarticle/collect',
+    name: 'myarticle-collect',
+    component: () => import('@/views/userarticle')
+  }, {
+    path: '/myarticle/history',
+    name: 'myarticle-history',
+    component: () => import('@/views/userarticle')
   }
 ]
 
