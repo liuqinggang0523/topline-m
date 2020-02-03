@@ -9,7 +9,12 @@
   v-for="(item,index) in list"
   :key="index"
   :title="item.title"
-  @click="$router.push('/article/'+item.art_id)">
+  @click="$router.push({
+        name: 'article',
+        params: {
+          articleId: article.art_id.toString()
+        }
+      })">
   <div slot="label">
     <van-grid :border="false" :column-num="3">
       <van-grid-item v-for="(img, index) in item.cover.images" :key="index">

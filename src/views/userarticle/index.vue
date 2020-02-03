@@ -31,9 +31,18 @@ export default {
     CollectArticle,
     HistoryArticle
   },
+  props: {
+    type: {
+      type: String
+    }
+  },
   data () {
+    let active = ['collect', 'history'].indexOf(this.type)
+    if (active === -1) {
+      active = 2 // 我的作品
+    }
     return {
-      active: 0
+      active // 控制激活的标签选项
     }
   }
 }

@@ -29,6 +29,7 @@ const routes = [
     component: () => import('@/views/search')
   }, {
     path: '/article/:articleID',
+    name: 'article',
     component: () => import('@/views/article'),
     props: true // 路由参数映射到组件的props中
   }, {
@@ -36,17 +37,10 @@ const routes = [
     name: 'user-profile',
     component: () => import('@/views/userprofile')
   }, {
-    path: '/userarticle',
-    name: 'user-article',
-    component: () => import('@/views/userarticle')
-  }, {
-    path: '/userarticle/collect',
-    name: 'user-article-collect',
-    component: () => import('@/views/userarticle')
-  }, {
-    path: '/userarticle/history',
-    name: 'user-article-history',
-    component: () => import('@/views/userarticle')
+    path: '/my-article/:type?',
+    name: 'my-article',
+    component: () => import('@/views/userarticle'),
+    props: true
   }
 ]
 
