@@ -31,6 +31,7 @@
 <script>
 import { getArticleList } from '@/API/article'
 export default {
+  // name: 'article',
   props: {
     channel: {
       type: Object,

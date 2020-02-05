@@ -12,7 +12,7 @@
   @click="$router.push({
         name: 'article',
         params: {
-          articleId: article.art_id.toString()
+          articleID: item.art_id.toString()
         }
       })">
   <div slot="label">
@@ -53,7 +53,6 @@ export default {
         page: this.page,
         per_page: this.per_page
       })
-      console.log(data)
       this.list.push(...data.data.results)
       // 加载状态结束
       this.loading = false

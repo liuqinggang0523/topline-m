@@ -12,7 +12,7 @@
   @click="$router.push({
         name: 'article',
         params: {
-          articleId: article.art_id.toString()
+          articleID: item.art_id.toString()
         }
       })">
   <div slot="label">
