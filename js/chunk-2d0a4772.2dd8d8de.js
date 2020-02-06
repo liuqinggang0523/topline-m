@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0a4772"],{"070e":function(n,t,e){"use strict";e.r(t);var a=function(){var n=this,t=n.$createElement,e=n._self._c||t;return e("van-nav-bar",{attrs:{title:"开发中..."}})},l=[],r={},u=r,c=e("2877"),s=Object(c["a"])(u,a,l,!1,null,null,null);t["default"]=s.exports}}]);
+//# sourceMappingURL=chunk-2d0a4772.2dd8d8de.js.map
