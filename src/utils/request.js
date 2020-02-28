@@ -53,6 +53,7 @@ request.interceptors.response.use(function (response) {
       redirectLogin()
     }
   }
+  return Promise.reject(error)
 })
 function redirectLogin () {
   router.push({
